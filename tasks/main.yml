@@ -1,0 +1,52 @@
+---
+# tasks file for ansible-role-hub/
+
+
+
+
+- name: install unzip
+  become: true
+  apt: name=unzip state=latest
+
+- name: create hub group
+  become: yes
+  group: name={{hub_group}} state=present
+
+- name: create hub user
+  become: yes
+  user: name="{{hub_user}}" group={{hub_group}} state=present
+
+- name: download hub
+  get_url: url="https://download-cf.jetbrains.com/hub/2.0/hub-ring-bundle-{{hub_version}}.zip" dest="{{download_directory}}/Hub{{hub_version}}.zip" validate_certs=False
+
+- name: create dir
+  become: true
+  file: path="{{hub_install_folder}}" state=directory owner="{{hub_user}}" group="{{hub_group}}" mode="777"
+
+- name: check if allredy installed
+  stat: path="{{hub_install_folder}}/hub-ring-bundle-{{hub_version}}"
+  register: installDir
+
+- block:
+    - name: untar hub
+      become: yes
+      unarchive: src="{{download_directory}}/Hub{{hub_version}}.zip" dest="{{hub_install_folder}}" copy=no
+      when: installDir.stat.exists == False
+
+    - name: chown hubdir
+      become: true
+      file: path="{{hub_install_folder}}" state=directory owner="{{hub_user}}" group="{{hub_group}}" mode="755" recurse=yes
+
+    - name: symlik to latest folder
+      become: true
+      file: dest="{{hub_install_folder}}/latest" src="{{hub_install_folder}}/hub-ring-bundle-{{hub_version}}" state=link owner="{{hub_user}}" group="{{hub_group}}" mode="777"
+
+    - name: symlik to latest folder
+      become: true
+      file: dest="/etc/init.d/hub" src="{{hub_install_folder}}/latest/bin/hub.sh" state=link owner="{{hub_user}}" group="{{hub_group}}" mode="777"
+
+    - name: debug output
+      debug: var=installDir
+
+  when: installDir.stat.exists == False
+  
