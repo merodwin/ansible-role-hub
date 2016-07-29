@@ -1,11 +1,18 @@
 ---
 # defaults file for ansible-role-hub/
 
-hub_version: "2.0.244"
+hub_version: "2.0.314"
 download_directory: "/tmp/"
+base-url: "http://foo.bar"
 hub_install_folder: "/opt/Hub"
 hub_data_path: "{{hub_install_folder}}/data"
 hub_user: "hub"
 hub_group: "hub"
 hub_http_port: "8080"
+hub_settings:
+  backups-dir: "{{hub_install_folder}}/backup"
+  temp-dir: "{{hub_install_folder}}/temp"
+  data-dir: "{{hub_install_folder}}/data"
+  logs-dir: "{{hub_install_folder}}/logs"
+  base-url: "{{base_url}}"
 

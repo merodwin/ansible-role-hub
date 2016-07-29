@@ -1,2 +1,10 @@
 ---
 
+- name: restart hub service
+  service: name=hub state=restarted
+
+- name: start hub service
+  service: name=hub state=started
+
+- name: stop hub service
+  service: name=hub state=stopped
