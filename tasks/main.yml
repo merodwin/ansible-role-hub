@@ -14,7 +14,7 @@
   user: name="{{hub_user}}" group={{hub_group}} state=present
 
 - name: download hub
-  get_url: url="https://download-cf.jetbrains.com/hub/2.0/hub-ring-bundle-{{hub_version}}.zip" dest="{{download_directory}}/Hub{{hub_version}}.zip" validate_certs=False
+  get_url: url="https://download-cf.jetbrains.com/hub/2.5/hub-ring-bundle-{{hub_version}}.zip" dest="{{download_directory}}/Hub{{hub_version}}.zip" validate_certs=False
 
 - name: create dir
   become: true
